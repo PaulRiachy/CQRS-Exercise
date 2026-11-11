@@ -1,0 +1,17 @@
+{
+  "name": "cqrs-task-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "check": "node --check src/app.js && node --check src/server.js && node --check src/commands/taskCommands.js && node --check src/queries/taskQueries.js && node --check src/routes/taskRoutes.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "mongoose": "^8.9.5"
+  }
+}
