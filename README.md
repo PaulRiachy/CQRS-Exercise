@@ -164,10 +164,3 @@ Express routes
 ```
 
 Both sides use the same Task model and collection. **Separation is in the code responsibilities**, not necessarily the physical storage.
-
-## 9. Important notes
-
-- This is intentionally not a full DDD architecture. CQRS and DDD can be combined, but the exercise only requires CQRS.
-- The completion update is atomic: only a task with `isCompleted: false` can be changed to `true`. A second completion gets `409`.
-- The React app only demonstrates create, list and complete. The GET-by-ID endpoint can be checked using Postman Client.
-- The exercise's optional features (delete, pagination, middleware, automated handler tests, logging) were **not** implemented, to keep the required scope basic.
