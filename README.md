@@ -87,7 +87,7 @@ CQRS_MERN_Task_Management/
 │       ├── models/Task.js            Mongoose schema (shared data)
 │       ├── commands/taskCommands.js  Create and complete = WRITES
 │       ├── queries/taskQueries.js    Get one and list = READS
-│       └── routes/taskRoutes.js      URL-to-handler mapping
+│       └── routes/taskRoutes.js      URL-to-mediator mapping
 └── frontend/
     ├── .env.example
     ├── package.json
@@ -150,13 +150,37 @@ Use Postman to test negative cases easily. A second completion should return HTT
 | Filter `?isCompleted=maybe`        | `400`                                        |
 | React form, list and complete      | Visible UI workflow                          |
 
-## 8. Why the structure is CQRS
+## 8. Mediator alongside CQRS
+
+The Mediator is a small dispatcher between Express routes and the existing handlers.
+CQRS still separates writes (commands) from reads (queries); the Mediator simply
+selects which handler to call. Business rules and MongoDB access stay in the handlers.
+
+- `backend/src/mediator/Mediator.js` provides `register(requestName, handler)` and asynchronous `send(requestName, payload)`.
+- `backend/src/mediator/taskMediator.js` registers `CreateTask` ? `createTask`, `CompleteTask` ? `completeTask`, `GetTask` ? `getTask`, and `ListTasks` ? `listTasks`.
+- Routes pass the task body, task ID, or `isCompleted` filter as the payload.
+
+For example, `POST /api/tasks` with `{ "title": "Learn Mediator" }` calls:
+
+```js
+await mediator.send("CreateTask", req.body);
+```
+
+The Mediator calls `createTask(req.body)`, which validates and saves through Mongoose.
+Its `{ id }` result returns to the route for the existing HTTP `201` response.
+`send()` returns asynchronous results and lets errors reach Express's existing error
+middleware, preserving validation and HTTP status codes.
+
+## 9. Why the structure is CQRS
 
 ```text
 React / Postman
       |
       v
 Express routes
+      |
+      v
+Mediator (send)
       |
       +-- POST / PUT --> command handlers --> Mongoose --> MongoDB  (WRITE)
       |

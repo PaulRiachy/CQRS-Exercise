@@ -4,9 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test": "node --test",
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "check": "node --check src/app.js && node --check src/server.js && node --check src/commands/taskCommands.js && node --check src/queries/taskQueries.js && node --check src/routes/taskRoutes.js"
+    "check": "node --check src/app.js && node --check src/server.js && node --check src/commands/taskCommands.js && node --check src/queries/taskQueries.js && node --check src/routes/taskRoutes.js && node --check src/mediator/Mediator.js && node --check src/mediator/taskMediator.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
